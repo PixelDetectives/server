@@ -8,7 +8,7 @@ import site.pixeldetective.server.dto.TestDTO;
 import site.pixeldetective.server.db.DBConnector;
 
 public class TestDAO {
-    private static Connection connection = DBConnector.getConnection();
+    private static Connection conn = DBConnector.getConnection();
 
     public TestDAO() {
 
@@ -16,7 +16,7 @@ public class TestDAO {
     public List<TestDTO> getAllTests() {
         List<TestDTO> testDataList = new ArrayList<>();
         String sql = "select * from Test";
-        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 int id = rs.getInt("Id");
@@ -29,9 +29,9 @@ public class TestDAO {
         return testDataList;
     }
 
-    public TestDTO getTestDataById(int id) {
+    public TestDTO getTestById(int id) {
         String sql = "select * from Test where Id = ?";
-        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, id);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
@@ -45,19 +45,19 @@ public class TestDAO {
         }
     }
 
-    public void insertTestData(TestDTO testData) {
+    public int createTest(TestDTO testData) {
         String sql = "insert into Test (name) values (?)";
-        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, testData.getName());
-            pstmt.executeUpdate();
+            return pstmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void updateTestData(TestDTO testData) {
+    public void updateTest(TestDTO testData) {
         String sql = "update Test set name = ? where Id = ?";
-        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, testData.getName());
             pstmt.setInt(2, testData.getId());
             pstmt.executeUpdate();
@@ -66,9 +66,9 @@ public class TestDAO {
         }
     }
 
-    public void deleteTestData(int id) {
+    public void deleteTest(int id) {
         String sql = "delete from Test where Id = ?";
-        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, id);
             pstmt.executeUpdate();
         } catch (SQLException e) {
