@@ -12,7 +12,7 @@ public class IndexRouter implements HttpHandler {
             // 현재 요청 URL 조회
             String path = exchange.getRequestURI().getPath();
             // /api 뒤에 오는 요청 파악
-            String subPath = path.replaceFirst("/api", "");
+            String subPath = path.replaceFirst("/pixel-detective/api", "");
             // 기본 핸들러 NotFoundHandler로 고정
             HttpHandler handler = new NotFoundHandler();
             switch (subPath) {
