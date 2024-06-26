@@ -34,6 +34,10 @@ public class IndexRouter implements HttpHandler {
                     // test로 들어올 경우
                     handler = new TestHandler();
                     break;
+                case "/matches" ,"matche":
+                    // matches,matche로 들어올 경우
+                    handler = new MatchesHandler();
+                    break;
                 default:
                     handler = new NotFoundHandler();
                     break;
