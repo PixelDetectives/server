@@ -1,6 +1,7 @@
 plugins {
     java
     application
+    eclipse
 }
 application {
     mainClass = "site.pixeldetective.server.Main"
