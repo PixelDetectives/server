@@ -73,7 +73,6 @@ public class MatchesHandler implements HttpHandler {
             // lines()를 통해 모든 라인을 읽어와 collect를 통해 join 합니다.
             String body = br.lines().collect(Collectors.joining());
 
-            System.out.println("POST MATCHES 요청 ~@!@!@1");
             // JSON 파싱
             // 요청은 JSON으로 일어나므로 JSONObject로 파싱
             JSONObject jsonRequest = new JSONObject(body);
@@ -84,13 +83,11 @@ public class MatchesHandler implements HttpHandler {
             String mStart = jsonRequest.getString("mStart");
             String mEnd = jsonRequest.getString("mEnd");
 
-            System.out.println("POST MATCHES 요청 ~@!@!@2");
 
             Date start = getDateFromString(mStart);
             Date end = getDateFromString(mEnd);
 
 
-            System.out.println("POST MATCHES 요청 ~@!@!@3");
 
             // 새 테스트 생성
             MatchDAO matchDAO = new MatchDAO();
@@ -101,7 +98,6 @@ public class MatchesHandler implements HttpHandler {
             newMatches.setmStart(start);
             newMatches.setmEnd(end);
 
-            System.out.println("POST MATCHES 요청 ~@!@!@4");
 
 
             int rowAffected = matchDAO.createMatch(newMatches);
