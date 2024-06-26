@@ -15,9 +15,11 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URI;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
 
 import static site.pixeldetective.server.router.IndexRouter.getDateFromString;
 import static site.pixeldetective.server.router.IndexRouter.queryToMap;
@@ -84,8 +86,8 @@ public class MatchesHandler implements HttpHandler {
             String mEnd = jsonRequest.getString("mEnd");
 
 
-            Date start = getDateFromString(mStart);
-            Date end = getDateFromString(mEnd);
+            Timestamp start = getDateFromString(mStart);
+            Timestamp end = getDateFromString(mEnd);
 
 
 
@@ -95,8 +97,8 @@ public class MatchesHandler implements HttpHandler {
             newMatches.setmPlayer1(mPlayer1);
             newMatches.setmPlayer2(mPlayer2);
             newMatches.setmResult(mResult);
-            newMatches.setmStart(start);
-            newMatches.setmEnd(end);
+//            newMatches.setmStart(start);
+//            newMatches.setmEnd(end);
 
 
 

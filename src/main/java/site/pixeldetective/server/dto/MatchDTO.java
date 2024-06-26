@@ -1,7 +1,7 @@
 package site.pixeldetective.server.dto;
 
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 /*
 desc matches
@@ -17,15 +17,15 @@ public class MatchDTO {
     private int mPlayer1;
     private int mPlayer2;
     private int mResult; // 플레이어1의 1:승   2:패  3:무
-    private Date mStart;
-    private Date mEnd;
+    private Timestamp mStart;
+    private Timestamp mEnd;
 
 
     public int getmPlayer1() {
         return mPlayer1;
     }
 
-    public MatchDTO(int mPlayer1, int mPlayer2, int mResult, Date mStart, Date mEnd) {
+    public MatchDTO(int mPlayer1, int mPlayer2, int mResult, Timestamp mStart, Timestamp mEnd) {
         this.mPlayer1 = mPlayer1;
         this.mPlayer2 = mPlayer2;
         this.mResult = mResult;
@@ -33,7 +33,7 @@ public class MatchDTO {
         this.mEnd = mEnd;
     }
 
-    public MatchDTO(int mNum, int mPlayer1, int mPlayer2, int mResult, Date mStart, Date mEnd) {
+    public MatchDTO(int mNum, int mPlayer1, int mPlayer2, int mResult, Timestamp mStart, Timestamp mEnd) {
         this.mNum = mNum;
         this.mPlayer1 = mPlayer1;
         this.mPlayer2 = mPlayer2;
@@ -86,19 +86,19 @@ public class MatchDTO {
         this.mResult = mResult;
     }
 
-    public Date getmStart() {
+    public Timestamp getmStart() {
         return mStart;
     }
 
-    public void setmStart(Date mStart) {
+    public void setmStart(Timestamp mStart) {
         this.mStart = mStart;
     }
 
-    public Date getmEnd() {
+    public Timestamp getmEnd() {
         return mEnd;
     }
 
-    public void setmEnd(Date mEnd) {
+    public void setmEnd(Timestamp mEnd) {
         this.mEnd = mEnd;
     }
 }

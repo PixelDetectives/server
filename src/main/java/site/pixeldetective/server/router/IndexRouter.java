@@ -5,6 +5,7 @@ import com.sun.net.httpserver.HttpHandler;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -79,19 +80,14 @@ public class IndexRouter implements HttpHandler {
         return result;
     }
 
-    /**
-     *
-     * @param dateString 데이터 문자열을 가지고 "yyyy/MM/dd/HH/mm/ss"
-     * @return Date객체를 반환해줌.
-     */
-    public static Date getDateFromString(String dateString) {
-        // 날짜 포맷
+    public static Timestamp getDateFromString(String dateString) {
+        // 날짜 포맷 "yyyy/MM/dd/HH/mm/ss"
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd/HH/mm/ss");
         try {
             // 문자열을 java.util.Date로 변환
             java.util.Date parsedDate = dateFormat.parse(dateString);
-            // java.util.Date를 java.sql.Date로 변환 (시간 정보는 무시됨)
-            return new Date(parsedDate.getTime());
+            // java.util.Date를 java.sql.Timestamp로 변환
+            return new Timestamp(parsedDate.getTime());
         } catch (ParseException e) {
             e.printStackTrace();
             return null;
