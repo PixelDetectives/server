@@ -97,8 +97,8 @@ public class MatchesHandler implements HttpHandler {
             newMatches.setmPlayer1(mPlayer1);
             newMatches.setmPlayer2(mPlayer2);
             newMatches.setmResult(mResult);
-//            newMatches.setmStart(start);
-//            newMatches.setmEnd(end);
+            newMatches.setmStart(start);
+            newMatches.setmEnd(end);
 
 
 
