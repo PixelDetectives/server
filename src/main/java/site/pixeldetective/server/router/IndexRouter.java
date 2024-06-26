@@ -35,14 +35,24 @@ public class IndexRouter implements HttpHandler {
                     // os 종료
                     os.close();
                     break;
+                case "/login":
+                	handler = new LoginHandler();
+                	break;
+                case "/signup":
+                	handler = new SignUpHandler();
+                	break;
                 case "/test":
                     // test로 들어올 경우
                     handler = new TestHandler();
                     break;
+<<<<<<< Updated upstream
                 case "/matches":
 
                     handler = new MatchesHandler();
                     break;
+=======
+                
+>>>>>>> Stashed changes
                 default:
                     handler = new NotFoundHandler();
                     break;
