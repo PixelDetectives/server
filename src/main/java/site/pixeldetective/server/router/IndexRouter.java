@@ -4,6 +4,8 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 public class IndexRouter implements HttpHandler {
     @Override
@@ -34,8 +36,8 @@ public class IndexRouter implements HttpHandler {
                     // test로 들어올 경우
                     handler = new TestHandler();
                     break;
-                case "/matches" ,"matche":
-                    // matches,matche로 들어올 경우
+                case "/matches":
+
                     handler = new MatchesHandler();
                     break;
                 default:
@@ -48,4 +50,25 @@ public class IndexRouter implements HttpHandler {
             throw new RuntimeException(e);
         }
     }
+
+    /**
+     *
+     * @param query
+     * @return Key Value를 맵으로 반환
+     */
+    public static Map<String, String> queryToMap(String query) {
+        Map<String, String> result = new HashMap<>();
+        if (query != null) {
+            for (String param : query.split("&")) {
+                String[] entry = param.split("=");
+                if (entry.length > 1) {
+                    result.put(entry[0], entry[1]);
+                } else {
+                    result.put(entry[0], "");
+                }
+            }
+        }
+        return result;
+    }
+
 }
