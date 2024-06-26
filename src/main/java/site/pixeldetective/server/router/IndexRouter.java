@@ -45,14 +45,9 @@ public class IndexRouter implements HttpHandler {
                     // test로 들어올 경우
                     handler = new TestHandler();
                     break;
-<<<<<<< Updated upstream
                 case "/matches":
-
                     handler = new MatchesHandler();
                     break;
-=======
-                
->>>>>>> Stashed changes
                 default:
                     handler = new NotFoundHandler();
                     break;
