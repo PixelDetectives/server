@@ -35,6 +35,7 @@ public class SignUpHandler implements HttpHandler {
 			signupDTO.setName(name);
 			signupDTO.setPw(pw);
 			int rowAffected = signupDAO.signupUser(signupDTO);
+			System.out.println(rowAffected);
 			statusCode = 201;
 			
 			JSONObject jsonResponse = new JSONObject();

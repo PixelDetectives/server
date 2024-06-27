@@ -61,6 +61,10 @@ public class IndexRouter implements HttpHandler {
                 case "/answer":
                 	handler = new AnswerHandler();
                 	break;
+<<<<<<< Updated upstream
+=======
+         
+>>>>>>> Stashed changes
                 default:
                     handler = new NotFoundHandler();
                     break;
