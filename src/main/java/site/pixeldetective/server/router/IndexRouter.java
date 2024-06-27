@@ -55,12 +55,13 @@ public class IndexRouter implements HttpHandler {
                 case "/chat":
                 	handler = new ChatHandler();
                 	break;                	
-                case "/game":
+                case "/gmae":
                 	handler = new GameHandler();
                 	break;
                 case "/answer":
                 	handler = new AnswerHandler();
                 	break;
+         
                 	
                 default:
                     handler = new NotFoundHandler();

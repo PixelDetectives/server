@@ -24,12 +24,13 @@ public class AnswerHandler implements HttpHandler {
         int statusCode = 200;
 
         if (exchange.getRequestMethod().equalsIgnoreCase("GET")) {
+
             // GET 요청 처리
             String query = exchange.getRequestURI().getQuery();
             if (query != null && query.startsWith("g_num=")) {
                 try {
                     int g_num = Integer.parseInt(query.substring(6));
-
+ 
                     // AnswerDAO를 사용하여 g_num에 해당하는 AnswerDTO 리스트 조회
                     try {
                         List<AnswerDTO> answers = new AnswerDAO().selectAnswer(g_num);
