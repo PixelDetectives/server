@@ -19,7 +19,7 @@ public class UserDAO {
 			pstmt.setString(2, loginData.getuPw());
 			ResultSet rs = pstmt.executeQuery();
 			if(rs.next()) {
-				return new UserDTO(loginData.getuId(),rs.getString("u_name"), loginData.getuPw());
+				return new UserDTO(rs.getInt("u_num"),loginData.getuId(),rs.getString("u_name"), loginData.getuPw());
 			}else {
 				return null;
 			}

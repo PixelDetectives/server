@@ -16,7 +16,7 @@ public class JwtSender {
     private static final Set<String> tokenBlacklist = new HashSet<>();
 
     // 새로운 토큰을 만든다
-    private static String createJWT(String username, int uNum, String uName, String uId) {
+    public static String createJWT(String username, int uNum, String uName, String uId) {
         Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY);
 
         return JWT.create()
@@ -30,7 +30,7 @@ public class JwtSender {
     }
 
     // 토큰의 정보를 검증함
-    private static boolean verifyJWT(String token) {
+    public static boolean verifyJWT(String token) {
         if (tokenBlacklist.contains(token)) {
             return false; // 토큰이 블랙리스트에 있는지 확인
         }
@@ -48,7 +48,7 @@ public class JwtSender {
     }
 
     // 토큰의 담긴 정보를 복호화함
-    private static DecodedJWT decodeJWT(String token) {
+    public static DecodedJWT decodeJWT(String token) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY);
             JWTVerifier verifier = JWT.require(algorithm)
@@ -61,7 +61,7 @@ public class JwtSender {
     }
 
 
-    private static void invalidateJWT(String token) {
+    public static void invalidateJWT(String token) {
         tokenBlacklist.add(token);
     }
 

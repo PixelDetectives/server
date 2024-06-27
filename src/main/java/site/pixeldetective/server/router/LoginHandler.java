@@ -13,7 +13,9 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 import site.pixeldetective.server.dao.LoginDAO;
+import site.pixeldetective.server.dao.UserDAO;
 import site.pixeldetective.server.dto.LoginDTO;
+import site.pixeldetective.server.dto.UserDTO;
 import site.pixeldetective.server.jwt.JwtSender;
 
 public class LoginHandler implements HttpHandler{
@@ -30,12 +32,12 @@ public class LoginHandler implements HttpHandler{
 			JSONObject jsonRequest = new JSONObject(body);
 			String id = jsonRequest.getString("u_id");
 			String pw = jsonRequest.getString("u_pw");
-			
-			LoginDAO loginDAO = new LoginDAO();
-			LoginDTO loginDTO = new LoginDTO();
-			loginDTO.setId(id);
-			loginDTO.setPw(pw);
-			LoginDTO rowAffected = loginDAO.loginUser(loginDTO);
+
+			UserDAO userDAO = new UserDAO();
+			UserDTO userDto = new UserDTO();
+			userDto.setuId(id);
+			userDto.setuPw(pw);
+			UserDTO rowAffected = userDAO.loginUser(userDto);
 			// 로그인 실패시
 			if(Objects.isNull(rowAffected)){
 				statusCode = 401;							// 인증 실패 상태코드
@@ -43,15 +45,16 @@ public class LoginHandler implements HttpHandler{
 				jsonResponse.put("message", "실패");
 				response = jsonResponse.toString();
 
-				JwtSender js = new JwtSender();
-
-
-
 			}else {
 				statusCode = 201;
 				JSONObject jsonResponse = new JSONObject();
 				jsonResponse.put("message", "성공");
 				response = jsonResponse.toString();
+
+				JwtSender js = new JwtSender();
+				// JWT를 받아옴 서버 메서드 호출
+				String jwt = js.createJWT(rowAffected.getuId(), rowAffected.getuNum(), rowAffected.getuName(), rowAffected.getuId());
+				exchange.getResponseHeaders().set("Authorization", "Bearer " + jwt);
 			}
 		}
 		exchange.getResponseHeaders().set("Content-Type", "application/json");
