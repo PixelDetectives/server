@@ -7,40 +7,40 @@ public class ChatDTO {
 
 	private int chat_id;
 	private String message;
+	private String uName;
 	private int sender;
 	private Timestamp sent_at;
-	
+
+
 	@Override
 	public String toString() {
-		return "ChatDTO [chat_id=" + chat_id + ", message=" + message + ", sender=" + sender + ", sent_at=" + sent_at
-				+ "]";
+		return "ChatDTO{" +
+				"chat_id=" + chat_id +
+				", message='" + message + '\'' +
+				", uName='" + uName + '\'' +
+				", sender=" + sender +
+				", sent_at=" + sent_at +
+				'}';
 	}
-	
-	public ChatDTO() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-	public ChatDTO(int chat_id, String message, int sender, Timestamp sent_at) {
-		super();
+
+	public ChatDTO(int chat_id, String message, String uName, int sender, Timestamp sent_at) {
 		this.chat_id = chat_id;
 		this.message = message;
+		this.uName = uName;
 		this.sender = sender;
 		this.sent_at = sent_at;
 	}
-	
-	public ChatDTO(String message, int sender, Timestamp sent_at) {
-		super();
+
+	public ChatDTO(String message, String uName, int sender, Timestamp sent_at) {
 		this.message = message;
+		this.uName = uName;
 		this.sender = sender;
 		this.sent_at = sent_at;
 	}
-	
-	public ChatDTO(String message, int sender) {
-		super();
-		this.message = message;
-		this.sender = sender;
+
+	public ChatDTO() {
 	}
-	
+
 	public int getChat_id() {
 		return chat_id;
 	}
@@ -64,5 +64,13 @@ public class ChatDTO {
 	}
 	public void setSent_at(Timestamp sent_at) {
 		this.sent_at = sent_at;
+	}
+
+	public String getuName() {
+		return uName;
+	}
+
+	public void setuName(String uName) {
+		this.uName = uName;
 	}
 }

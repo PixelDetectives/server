@@ -13,13 +13,14 @@ public class ChatDAO {
     
 	public int insertChat(ChatDTO chatData){
 	    int re = -1;
-	    String sql = "INSERT INTO chat (message, sender, sent_at) VALUES (?, ?, NOW())";
+	    String sql = "INSERT INTO chat (message,uName, sender, sent_at) VALUES (?,?, ?, NOW())";
 
 	    try {
 	    		PreparedStatement pstmt = conn.prepareStatement(sql);
 	    		
 		    	pstmt.setString(1, chatData.getMessage());
-		    	pstmt.setInt(2, chatData.getSender());
+				pstmt.setString(2, chatData.getuName());
+		    	pstmt.setInt(3, chatData.getSender());
 		    	
 	            return pstmt.executeUpdate();
 	            
@@ -31,7 +32,7 @@ public class ChatDAO {
 	public List<ChatDTO> selectChat(){
 		List<ChatDTO> chatList = new ArrayList<>();
 		
-		String sql = "SELECT chat_id, message, sender, sent_at FROM chat ORDER BY sent_at DESC";
+		String sql = "SELECT chat_id,u_name, message, sender, sent_at FROM chat ORDER BY sent_at DESC";
 		
 	                try {
 	                	PreparedStatement pstmt = conn.prepareStatement(sql);            	
@@ -39,10 +40,11 @@ public class ChatDAO {
 	                	while(rs.next()) {
 	                		int chat_id = rs.getInt("chat_id");
 	                		String message = rs.getString("message");
+							String uName = rs.getString("u_name");
 	                		int sender = rs.getInt("sender");
 	                		Timestamp sent_at = rs.getTimestamp("sent_at");  
 	                		
-	                		ChatDTO chat = new ChatDTO(message, sender, sent_at);
+	                		ChatDTO chat = new ChatDTO(message,uName, sender, sent_at);
 	                		chatList.add(chat);
 	                	}
 	                }catch(SQLException e) {

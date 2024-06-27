@@ -33,6 +33,7 @@ public class ChatHandler implements HttpHandler {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("chat_id", chat.getChat_id());
                 jsonObject.put("message", chat.getMessage());
+                jsonObject.put("u_name", chat.getuName());
                 jsonObject.put("sender", chat.getSender());
                 jsonObject.put("sent_at", chat.getSent_at().toString()); // Timestamp를 문자열로 변환
                 jsonArray.put(jsonObject);
@@ -55,12 +56,14 @@ public class ChatHandler implements HttpHandler {
 
             String message = jsonRequest.getString("message");
             int sender = jsonRequest.getInt("sender");
-            
+
+            String u_name = jsonRequest.getString("u_name");
+
             // 현재 시각을 Timestamp로 생성
             Timestamp sent_at = new Timestamp(System.currentTimeMillis());
             
          // ChatDTO 객체 생성 (sent_at을 포함한 생성자 사용)
-            ChatDTO chatData = new ChatDTO(message, sender, sent_at);
+            ChatDTO chatData = new ChatDTO(message,u_name, sender, sent_at);
             
             // ChatDAO를 사용하여 채팅 메시지 데이터베이스에 삽입
             int rowsAffected = new ChatDAO().insertChat(chatData);
