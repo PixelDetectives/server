@@ -23,7 +23,7 @@ public class GameHandler implements HttpHandler {
         if (exchange.getRequestMethod().equalsIgnoreCase("GET")) {
         	List<GameDTO> gameList;
 			try {
-				gameList = new GameDAO().selelctGames();
+				gameList = new GameDAO().selectGames();
 				   
                 // JSON으로 변환
                 JSONArray jsonArray = new JSONArray();

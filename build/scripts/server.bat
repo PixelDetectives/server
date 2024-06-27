@@ -68,7 +68,7 @@ goto fail
 :execute
 @rem Setup the command line
 
-set CLASSPATH=%APP_HOME%\lib\server-1.0-SNAPSHOT.jar;%APP_HOME%\lib\json-20210307.jar;%APP_HOME%\lib\mysql-connector-java-8.0.29.jar;%APP_HOME%\lib\protobuf-java-3.19.4.jar
+set CLASSPATH=%APP_HOME%\lib\server-1.0-SNAPSHOT.jar;%APP_HOME%\lib\json-20210307.jar;%APP_HOME%\lib\mysql-connector-java-8.0.29.jar;%APP_HOME%\lib\Java-WebSocket-1.5.2.jar;%APP_HOME%\lib\slf4j-simple-1.7.32.jar;%APP_HOME%\lib\java-jwt-3.18.1.jar;%APP_HOME%\lib\protobuf-java-3.19.4.jar;%APP_HOME%\lib\slf4j-api-1.7.32.jar;%APP_HOME%\lib\jackson-databind-2.11.0.jar;%APP_HOME%\lib\jackson-annotations-2.11.0.jar;%APP_HOME%\lib\jackson-core-2.11.0.jar
 
 
 @rem Execute server

@@ -13,10 +13,11 @@ public class ChatDAO {
     
 	public int insertChat(ChatDTO chatData){
 	    int re = -1;
-	    String sql = "INSERT INTO chat (message, sender) VALUES (?, ?)";
+	    String sql = "INSERT INTO chat (message, sender, sent_at) VALUES (?, ?, NOW())";
 
-	    try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-	    	
+	    try {
+	    		PreparedStatement pstmt = conn.prepareStatement(sql);
+	    		
 		    	pstmt.setString(1, chatData.getMessage());
 		    	pstmt.setInt(2, chatData.getSender());
 		    	
@@ -36,11 +37,12 @@ public class ChatDAO {
 	                	PreparedStatement pstmt = conn.prepareStatement(sql);            	
 	                	ResultSet rs = pstmt.executeQuery();           	
 	                	while(rs.next()) {
-	                		int id = rs.getInt("chat_id");
+	                		int chat_id = rs.getInt("chat_id");
 	                		String message = rs.getString("message");
 	                		int sender = rs.getInt("sender");
-	                		Date sentAt = rs.getDate("sent_at");       		
-	                		ChatDTO chat = new ChatDTO(id, message, sender, sentAt);
+	                		Timestamp sent_at = rs.getTimestamp("sent_at");  
+	                		
+	                		ChatDTO chat = new ChatDTO(message, sender, sent_at);
 	                		chatList.add(chat);
 	                	}
 	                }catch(SQLException e) {
@@ -48,9 +50,5 @@ public class ChatDAO {
 	                	throw new RuntimeException(e);
 	                }
 		return chatList;
-	}
-	
-	public static void main(String[] args) {
-		new ChatDAO().insertChat(new ChatDTO("sdfsdf",1,new Date(124,5,24)));
 	}
 }
