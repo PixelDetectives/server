@@ -14,7 +14,6 @@ import java.util.List;
 public class RoomDAO {
     private static Connection conn = DBConnector.getConnection();
 
-    // 조회
     public List<RoomDTO> getAllRooms() {
         List<RoomDTO> roomDTOList = new ArrayList<>();
         String sql = "select * from room";
@@ -36,9 +35,8 @@ public class RoomDAO {
         return roomDTOList;
     }
 
-    // 생성
     public int createRoom(RoomDTO roomDTO) {
-        String sql = "insert into room values (?,?,?,?,?)";
+        String sql = "INSERT INTO room (r_player1, r_player2, r_name, r_difficulty, g_num) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
 //            pstmt.setInt(1, roomDTO.getR_roomID());
             pstmt.setInt(1, roomDTO.getU_num_player1());

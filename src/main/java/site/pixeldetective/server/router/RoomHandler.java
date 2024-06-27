@@ -11,6 +11,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -69,10 +70,10 @@ public class RoomHandler implements HttpHandler {
             response = new JSONObject().put("error", "허용되지 않는 메소드입니다.").toString();
             statusCode = 405; // 405 Method Not Allowed
         }
-        exchange.getResponseHeaders().set("Content-Type", "application/json");
-        exchange.sendResponseHeaders(statusCode, response.getBytes().length);
+        exchange.getResponseHeaders().set("Content-Type", "application/json; charset=UTF-8");
+        exchange.sendResponseHeaders(statusCode, response.getBytes(StandardCharsets.UTF_8).length);
         OutputStream os = exchange.getResponseBody();
-        os.write(response.getBytes());
+        os.write(response.getBytes(StandardCharsets.UTF_8));
         os.close();
     }
 }
