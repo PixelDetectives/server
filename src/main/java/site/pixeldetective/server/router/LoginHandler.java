@@ -39,6 +39,8 @@ public class LoginHandler implements HttpHandler{
 			JSONObject jsonResponse = new JSONObject();
 			jsonResponse.put("message", "성공");
 			response = jsonResponse.toString();
+
+
 		}
 		exchange.getResponseHeaders().set("Content-Type", "application/json");
         exchange.sendResponseHeaders(statusCode, response.getBytes().length);
