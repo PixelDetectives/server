@@ -55,7 +55,7 @@ public class IndexRouter implements HttpHandler {
                 case "/chat":
                 	handler = new ChatHandler();
                 	break;                	
-                case "/gmae":
+                case "/game":
                 	handler = new GameHandler();
                 	break;
                 case "/answer":
