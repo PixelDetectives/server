@@ -49,6 +49,10 @@ public class IndexRouter implements HttpHandler {
                 case "/matches":
                     handler = new MatchesHandler();
                     break;
+                case "/room":
+                    handler = new RoomHandler();
+                    break;
+
                 default:
                     handler = new NotFoundHandler();
                     break;
@@ -80,6 +84,11 @@ public class IndexRouter implements HttpHandler {
         return result;
     }
 
+    /**
+     *
+     * @param dateString
+     * @return
+     */
     public static Timestamp getDateFromString(String dateString) {
         // 날짜 포맷 "yyyy/MM/dd/HH/mm/ss"
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd/HH/mm/ss");
