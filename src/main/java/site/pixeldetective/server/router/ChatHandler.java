@@ -43,6 +43,7 @@ public class ChatHandler implements HttpHandler {
             
         } else if (exchange.getRequestMethod().equalsIgnoreCase("POST")) {
 
+            System.out.println("ChatHandler Post");
             // 요청에 바디에 있는 데이터 utf-8 인코딩으로 읽어온다.
             InputStreamReader isr = new InputStreamReader(exchange.getRequestBody(), "utf-8");
             // BufferedReader를 사용하여 InputStreamReader에서 데이터를 읽어옵니다.
@@ -54,20 +55,23 @@ public class ChatHandler implements HttpHandler {
             // 요청은 JSON으로 일어나므로 JSONObject로 파싱
             JSONObject jsonRequest = new JSONObject(body);
 
+
             String message = jsonRequest.getString("message");
             int sender = jsonRequest.getInt("sender");
 
             String u_name = jsonRequest.getString("u_name");
 
+
             // 현재 시각을 Timestamp로 생성
             Timestamp sent_at = new Timestamp(System.currentTimeMillis());
-            
-         // ChatDTO 객체 생성 (sent_at을 포함한 생성자 사용)
+
+            // ChatDTO 객체 생성 (sent_at을 포함한 생성자 사용)
             ChatDTO chatData = new ChatDTO(message,u_name, sender, sent_at);
-            
+
+
             // ChatDAO를 사용하여 채팅 메시지 데이터베이스에 삽입
             int rowsAffected = new ChatDAO().insertChat(chatData);
-            
+
             // 응답 생성
             JSONObject jsonResponse = new JSONObject();
             if (rowsAffected > 0) {
