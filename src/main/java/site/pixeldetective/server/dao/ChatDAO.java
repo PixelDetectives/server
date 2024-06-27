@@ -32,7 +32,7 @@ public class ChatDAO {
 	public List<ChatDTO> selectChat(){
 		List<ChatDTO> chatList = new ArrayList<>();
 		
-		String sql = "SELECT chat_id,u_name, message, sender, sent_at FROM chat ORDER BY sent_at DESC";
+		String sql = "SELECT chat_id,u_name, message, sender, sent_at FROM chat ORDER BY sent_at asc";
 		
 	                try {
 	                	PreparedStatement pstmt = conn.prepareStatement(sql);            	
