@@ -13,7 +13,7 @@ public class ChatDAO {
     
 	public int insertChat(ChatDTO chatData){
 	    int re = -1;
-	    String sql = "INSERT INTO chat (message,uName, sender, sent_at) VALUES (?,?, ?, NOW())";
+	    String sql = "INSERT INTO chat (message,u_name, sender, sent_at) VALUES (?,?, ?, NOW())";
 
 	    try {
 	    		PreparedStatement pstmt = conn.prepareStatement(sql);

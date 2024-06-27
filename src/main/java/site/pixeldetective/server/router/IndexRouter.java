@@ -61,8 +61,6 @@ public class IndexRouter implements HttpHandler {
                 case "/answer":
                 	handler = new AnswerHandler();
                 	break;
-         
-                	
                 default:
                     handler = new NotFoundHandler();
                     break;
