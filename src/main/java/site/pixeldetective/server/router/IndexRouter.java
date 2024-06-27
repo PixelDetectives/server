@@ -52,7 +52,6 @@ public class IndexRouter implements HttpHandler {
                 case "/room":
                     handler = new RoomHandler();
                     break;
-<<<<<<< Updated upstream
                 case "/chat":
                 	handler = new ChatHandler();
                 	break;                	
@@ -62,10 +61,6 @@ public class IndexRouter implements HttpHandler {
                 case "/answer":
                 	handler = new AnswerHandler();
                 	break;
-         
-                	
-=======
->>>>>>> Stashed changes
                 default:
                     handler = new NotFoundHandler();
                     break;
