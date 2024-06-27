@@ -33,7 +33,6 @@ public class TestHandler implements HttpHandler {
             }
             response = jsonArray.toString();
         } else if (exchange.getRequestMethod().equalsIgnoreCase("POST")) {
-
             // 요청에 바디에 있는 데이터 utf-8 인코딩으로 읽어온다.
             InputStreamReader isr = new InputStreamReader(exchange.getRequestBody(), "utf-8");
             // BufferedReader를 사용하여 InputStreamReader에서 데이터를 읽어옵니다.
@@ -58,7 +57,6 @@ public class TestHandler implements HttpHandler {
             jsonResponse.put("message", "테스트가 성공적으로 생성되었습니다.");
             response = jsonResponse.toString();
         } else if (exchange.getRequestMethod().equalsIgnoreCase("PUT")) {
-
             // 요청에 바디에 있는 데이터 utf-8 인코딩으로 읽어온다.
             InputStreamReader isr = new InputStreamReader(exchange.getRequestBody(), "utf-8");
             // BufferedReader를 사용하여 InputStreamReader에서 데이터를 읽어옵니다.
