@@ -11,7 +11,6 @@ import org.json.JSONObject;
 import com.sun.net.httpserver.HttpHandler;
 
 import site.pixeldetective.server.dao.UserDAO;
-import site.pixeldetective.server.dto.SignUpDTO;
 import site.pixeldetective.server.dto.UserDTO;
 
 import com.sun.net.httpserver.HttpExchange;
