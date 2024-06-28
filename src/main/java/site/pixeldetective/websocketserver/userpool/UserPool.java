@@ -9,8 +9,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class UserPool {
     // 사용자 정보를 저장하는 ConcurrentHashMap
-    private static final ConcurrentHashMap<Integer, WebSocket> currentConnections = new ConcurrentHashMap<>();
-    private static final ConcurrentHashMap<Integer, CurrentUser> currentUsers = new ConcurrentHashMap<>();
+    private static volatile ConcurrentHashMap<Integer, WebSocket> currentConnections = new ConcurrentHashMap<>();
+    private static volatile  ConcurrentHashMap<Integer, CurrentUser> currentUsers = new ConcurrentHashMap<>();
 
     private static UserPool instance;
 

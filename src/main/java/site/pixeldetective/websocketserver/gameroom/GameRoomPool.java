@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class GameRoomPool {
 
-    private static GameRoomPool instance;
+    private static volatile GameRoomPool instance;
     private final ConcurrentHashMap<Integer, GameRoom> currentCreatedRooms = new ConcurrentHashMap<>();
 
     private GameRoomPool() {
@@ -80,4 +80,16 @@ public class GameRoomPool {
         }
         return gameRoom;
     }
+    public void deleteGameRoomBySessionId1(int currentUserSessionId1) {
+        int key = -1;
+        for (int k : currentCreatedRooms.keySet()) {
+            if (currentUserSessionId1 == currentCreatedRooms.get(k).getCurrentUser1()) {
+                key = k;
+            }
+        }
+        if (key != -1) {
+            currentCreatedRooms.remove(key);
+        }
+    }
+
 }

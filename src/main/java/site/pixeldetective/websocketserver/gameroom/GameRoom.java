@@ -6,7 +6,6 @@ import site.pixeldetective.websocketserver.userpool.CurrentUser;
 import site.pixeldetective.websocketserver.userpool.UserPool;
 
 public class GameRoom {
-
     private String roomName;
 
     private int difficulty;
@@ -38,6 +37,7 @@ public class GameRoom {
     }
 
     public String getRoomName() {
+
         return roomName;
     }
 
