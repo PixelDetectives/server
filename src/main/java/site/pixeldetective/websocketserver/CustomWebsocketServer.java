@@ -3,7 +3,9 @@ package site.pixeldetective.websocketserver;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
+import org.json.JSONArray;
 import org.json.JSONObject;
+import site.pixeldetective.websocketserver.gameroom.GameRoom;
 import site.pixeldetective.websocketserver.handler.ChatHandler;
 import site.pixeldetective.websocketserver.handler.WebSocketGameHandler;
 import site.pixeldetective.websocketserver.handler.WebSocketHandler;
@@ -13,7 +15,10 @@ import site.pixeldetective.websocketserver.userpool.UserPool;
 
 import java.net.InetSocketAddress;
 import java.net.http.HttpHeaders;
+import java.net.http.HttpRequest;
+import java.util.EnumSet;
 import java.util.Random;
+
 
 public class CustomWebsocketServer extends WebSocketServer {
     private final int PORT;
@@ -37,13 +42,19 @@ public class CustomWebsocketServer extends WebSocketServer {
     // 사용자가 입력을 요청할 때
     @Override
     public void onOpen(WebSocket conn, ClientHandshake clientHandshake) {
-        System.out.println(conn.getRemoteSocketAddress());
-        System.out.println(clientHandshake.getResourceDescriptor());
-        int uId = Integer.parseInt(clientHandshake.getFieldValue("u_id"));
-//        CurrentUser currentUser = HttpConnector.getInstance().getCurrentUserById(uId, null);
-        CurrentUser currentUser = new CurrentUser(1, "1", "1");
-        UserPool.getInstance().addUser(conn, currentUser);
-        System.out.println("New client connected : " + conn.getRemoteSocketAddress());
+        try {
+            int sessionId = conn.hashCode();
+            System.out.println(conn.getRemoteSocketAddress());
+            System.out.println(clientHandshake.getResourceDescriptor());
+            String uId = clientHandshake.getFieldValue("u_id");
+            String uName = clientHandshake.getFieldValue("u_name");
+            System.out.println(conn.hashCode() + " " + uId + " " + uName);
+            CurrentUser currentUser = new CurrentUser(uId, uName, "join");
+            UserPool.getInstance().addUser(sessionId, conn, currentUser);
+            System.out.println("New client connected : " + conn.getRemoteSocketAddress());
+        } catch (Exception exception) {
+            System.out.println(exception.getMessage());
+        }
     }
     // client가 접속을 끊음.
     // conn 연결된 WebScoket 객체
@@ -57,7 +68,7 @@ public class CustomWebsocketServer extends WebSocketServer {
     @Override
     public void onClose(WebSocket conn, int i, String s, boolean b) {
         System.out.println(s + " " + b + " " + i);
-        WebSocketHandler.removeCurrentUser(conn);
+        WebSocketHandler.removeCurrentUser(conn.hashCode());
         System.out.println("Client disconnected : " + conn.getRemoteSocketAddress());
     }
     // client에서 메시지 혹은 요청 명령어를 보냄
@@ -66,6 +77,8 @@ public class CustomWebsocketServer extends WebSocketServer {
         try {
             JSONObject request = new JSONObject(message);
             String command = request.getString("command");
+            JSONObject jsonObject = new JSONObject();
+            String uId;
             switch (command) {
                 case "hello":
                     WebSocketHandler.sayHello();
@@ -75,40 +88,60 @@ public class CustomWebsocketServer extends WebSocketServer {
                     conn.send("" + WebSocketHandler.getUserCount());
                     break;
                 case "sendChat":
-                    String nickname = request.getString("nickname");
                     String content = request.getString("message");
+                    CurrentUser currentUser = UserPool.getInstance().getUser(conn.hashCode());
+                    String nickname = currentUser.getuName();
                     ChatHandler.receiveMessage(nickname, content);
                     conn.send("receive chat " + nickname + " " + content);
                     break;
                 case "getCurrentUserList":
-                    conn.send(WebSocketHandler.getCurrentUserList());
+                    WebSocketHandler.getCurrentUserList();
                     break;
-                case "quickMatching":
-                    WebSocketHandler.currentUserStatusMatching(conn);
+                case "statusMatching":
+                    WebSocketHandler.currentUserStatusMatching(conn.hashCode(), conn);
                     conn.send("turn to Matching");
                     break;
                 case "cancleMatching":
-                    WebSocketHandler.currentUserStatusJoin(conn);
+                    WebSocketHandler.currentUserStatusJoin(conn.hashCode(), conn);
                     conn.send("turn to Join");
                     break;
-                case "roomCreate":
-                    System.out.println("server try roomCreate");
+                case "createRoom":
                     int difficulty = request.getInt("r_difficulty");
                     String roomName = request.getString("r_name");
-                    boolean ret = WebSocketGameHandler.userCreateRoom(conn, roomName, difficulty);
+                    WebSocketHandler.currentUserStatusMatching(conn.hashCode(), conn);
+                    boolean ret = WebSocketGameHandler.userCreateRoom(conn.hashCode(), roomName, difficulty);
                     if (ret) {
-                        conn.send("room created");
+                        jsonObject.put("status", "success");
                     } else {
-                        conn.send("something is happened");
+                        jsonObject.put("status", "fail");
                     }
-                    WebSocketGameHandler.getCurrentRoomList();
+                    conn.send(jsonObject.toString());
+                    WebSocketGameHandler.braodCaseCurrentRoomList();
                     break;
                 case "getCurrentRoomList":
-                    WebSocketGameHandler.getCurrentRoomList();
+                    jsonObject.put("type", "currentRooms");
+                    JSONArray jsonArray = WebSocketGameHandler.getCurrentRoomList();
+                    jsonObject.put("data", jsonArray.toString());
+                    conn.send(jsonObject.toString());
+                    break;
+                case "joinRoom":
+                    uId = request.getString("session");
+                    WebSocketHandler.currentUserStatusMatching(conn.hashCode(), conn);
+                    GameRoom gameRoom = WebSocketGameHandler.getGameRoomByUId(uId);
+                    if (gameRoom == null) {
+                        conn.send("could not found");
+                    } else {
+                        int currentUser1 = gameRoom.getCurrentUser1();
+                        int currentUser2 = gameRoom.getCurrentUser2();
+                        UserPool.getInstance().getConnection(currentUser1).send("game matching");
+                        UserPool.getInstance().getConnection(currentUser2).send("game matching");
+                    }
                     break;
                 case "roomDelete":
+                    uId = UserPool.getInstance().getUser(conn.hashCode()).getuId();
+                    WebSocketGameHandler.removeGameRoomByUId(uId);
+                    conn.send("server close room");
                     System.out.println("server try roomDelete");
-
                 default:
                     break;
             }
@@ -129,3 +162,10 @@ public class CustomWebsocketServer extends WebSocketServer {
         System.out.println("Websocket Server started on port " + PORT);
     }
 }
+
+
+//{
+//    "data":"" +
+//        "[{\"r_id\":\"{\\\"uId\\\":1,\\\"uName\\\":\\\"1\\\",\\\"status\\\":\\\"1\\\"}\",\"r_difficulty\":0,\"r_name\":\"이것은 방 이름 입니다.\"}," +
+//        "{\"r_id\":\"{\\\"uId\\\":1,\\\"uName\\\":\\\"1\\\",\\\"status\\\":\\\"1\\\"}\",\"r_difficulty\":0,\"r_name\":\"이것은 방 이름입니다.\"}]",
+//        "type":"currentRooms"}

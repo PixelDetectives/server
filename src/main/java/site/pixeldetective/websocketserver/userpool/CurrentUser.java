@@ -3,7 +3,7 @@ package site.pixeldetective.websocketserver.userpool;
 import org.json.JSONObject;
 
 public class CurrentUser {
-    private int uId;
+    private String uId;
     private String uName;
 
     // Join : 현재 로그인 한 유저
@@ -13,7 +13,7 @@ public class CurrentUser {
     public CurrentUser() {
 
     }
-    public CurrentUser(int uId, String uName, String status) {
+    public CurrentUser(String uId, String uName, String status) {
         this.uId = uId;
         this.uName = uName;
         this.status = status;
@@ -26,11 +26,11 @@ public class CurrentUser {
         this.uName = uName;
     }
 
-    public int getuId() {
+    public String getuId() {
         return uId;
     }
 
-    public void setuId(int uId) {
+    public void setuId(String uId) {
         this.uId = uId;
     }
 
