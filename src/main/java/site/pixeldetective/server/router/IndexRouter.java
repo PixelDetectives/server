@@ -2,6 +2,8 @@ package site.pixeldetective.server.router;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import org.w3c.dom.UserDataHandler;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.Date;
@@ -61,7 +63,13 @@ public class IndexRouter implements HttpHandler {
                 case "/answer":
                 	handler = new AnswerHandler();
                 	break;
+<<<<<<< Updated upstream
 
+=======
+                case "/user":
+                    handler = new UserInfoHander();
+                    break;
+>>>>>>> Stashed changes
                 default:
                     handler = new NotFoundHandler();
                     break;
