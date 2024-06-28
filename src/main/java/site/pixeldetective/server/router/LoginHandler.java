@@ -17,7 +17,6 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 import site.pixeldetective.server.dao.ChatDAO;
-import site.pixeldetective.server.dao.LoginDAO;
 import site.pixeldetective.server.dao.UserDAO;
 import site.pixeldetective.server.dto.ChatDTO;
 import site.pixeldetective.server.dto.LoginDTO;

@@ -13,11 +13,13 @@ public class UserDAO {
 	
 	//로그인 SQL
 	public UserDTO loginUser (UserDTO loginData) {
-		String sql = "select u_num,u_id, u_name from users where u_id = ? and u_pw = ?";
+		String sql = "select u_num, u_id, u_name from users where u_id = ? and u_pw = ?";
 		try(PreparedStatement pstmt = conn.prepareStatement(sql)) {
+			System.out.println("한글 안되나");
 			pstmt.setString(1, loginData.getuId());
 			pstmt.setString(2, loginData.getuPw());
 			ResultSet rs = pstmt.executeQuery();
+			System.out.println(rs);
 			if(rs.next()) {
 				return new UserDTO(rs.getInt("u_num"),loginData.getuId(),rs.getString("u_name"), loginData.getuPw());
 			}else {
