@@ -39,7 +39,7 @@ public class CustomWebsocketServer extends WebSocketServer {
     public void onOpen(WebSocket conn, ClientHandshake clientHandshake) {
         System.out.println(conn.getRemoteSocketAddress());
         System.out.println(clientHandshake.getResourceDescriptor());
-        int uId = Integer.parseInt(clientHandshake.getFieldValue("u_id"));
+//        int uId = Integer.parseInt(clientHandshake.getFieldValue("u_id"));
 //        CurrentUser currentUser = HttpConnector.getInstance().getCurrentUserById(uId, null);
         CurrentUser currentUser = new CurrentUser(1, "1", "1");
         UserPool.getInstance().addUser(conn, currentUser);
