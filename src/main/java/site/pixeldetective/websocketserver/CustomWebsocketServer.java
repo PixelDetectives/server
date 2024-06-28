@@ -101,7 +101,7 @@ public class CustomWebsocketServer extends WebSocketServer {
                     WebSocketHandler.currentUserStatusMatching(conn.hashCode(), conn);
                     conn.send("turn to Matching");
                     break;
-                case "cancleMatching":
+                case "cancelMatching":
                     WebSocketHandler.currentUserStatusJoin(conn.hashCode(), conn);
                     conn.send("turn to Join");
                     break;
