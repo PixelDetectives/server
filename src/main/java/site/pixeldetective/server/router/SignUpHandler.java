@@ -10,8 +10,8 @@ import org.json.JSONObject;
 
 import com.sun.net.httpserver.HttpHandler;
 
-import site.pixeldetective.server.dao.SignUpDAO;
-import site.pixeldetective.server.dto.SignUpDTO;
+import site.pixeldetective.server.dao.UserDAO;
+import site.pixeldetective.server.dto.UserDTO;
 
 import com.sun.net.httpserver.HttpExchange;
 
@@ -29,11 +29,11 @@ public class SignUpHandler implements HttpHandler {
 			String name = jsonRequest.getString("u_name");
 			String pw = jsonRequest.getString("u_pw");
 			
-			SignUpDAO signupDAO = new SignUpDAO();
-			SignUpDTO signupDTO = new SignUpDTO();
-			signupDTO.setId(id);
-			signupDTO.setName(name);
-			signupDTO.setPw(pw);
+			UserDAO signupDAO = new UserDAO();
+			UserDTO signupDTO = new UserDTO();
+			signupDTO.setuId(id);
+			signupDTO.setuName(name);
+			signupDTO.setuPw(pw);
 			int rowAffected = signupDAO.signupUser(signupDTO);
 			System.out.println(rowAffected);
 			statusCode = 201;

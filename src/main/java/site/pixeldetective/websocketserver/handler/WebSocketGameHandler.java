@@ -40,4 +40,7 @@ public class WebSocketGameHandler {
     public static GameRoom getGameRoomBySessionId1(int currentUserSessionId1) {
         return GameRoomPool.getInstance().getGameRoomBySessionId1(currentUserSessionId1);
     }
+    public static void deleteGameRoomBySessionId1(int currentUserSessionId1) {
+        GameRoomPool.getInstance().deleteGameRoomBySessionId1(currentUserSessionId1);
+    }
 }
