@@ -71,4 +71,13 @@ public class GameRoomPool {
         }
         currentCreatedRooms.remove(sId);
     }
+    public GameRoom getGameRoomBySessionId1(int currentUserSessionId1) {
+        GameRoom gameRoom = null;
+        for (GameRoom gr : currentCreatedRooms.values()) {
+            if (currentUserSessionId1 == gr.getCurrentUser1()) {
+                gameRoom = gr;
+            }
+        }
+        return gameRoom;
+    }
 }

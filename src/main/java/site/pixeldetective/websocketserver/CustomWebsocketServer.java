@@ -125,9 +125,10 @@ public class CustomWebsocketServer extends WebSocketServer {
                     conn.send(jsonObject.toString());
                     break;
                 case "joinRoom":
-                    uId = request.getString("session");
+                    int currentUserSessionId1 = request.getInt("currentUserSessionId1");
                     WebSocketHandler.currentUserStatusMatching(conn.hashCode(), conn);
-                    GameRoom gameRoom = WebSocketGameHandler.getGameRoomByUId(uId);
+                    GameRoom gameRoom = WebSocketGameHandler.getGameRoomBySessionId1(currentUserSessionId1);
+                    gameRoom.setCurrentUser2(conn.hashCode());
                     if (gameRoom == null) {
                         conn.send("could not found");
                     } else {
