@@ -2,8 +2,6 @@ package site.pixeldetective.server;
 
 import com.mysql.cj.xdevapi.Client;
 import com.sun.net.httpserver.HttpServer;
-import org.java_websocket.WebSocket;
-import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
 import java.io.IOException;
