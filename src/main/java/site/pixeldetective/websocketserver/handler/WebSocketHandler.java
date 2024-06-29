@@ -1,6 +1,8 @@
 package site.pixeldetective.websocketserver.handler;
 
 import org.java_websocket.WebSocket;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import site.pixeldetective.websocketserver.userpool.UserPool;
 
 public class WebSocketHandler {
@@ -13,23 +15,21 @@ public class WebSocketHandler {
         System.out.println("Say Hello");
     }
 
-    public static int getUserCount() {
+    public static JSONObject getUserCount() {
         return UserPool.getInstance().getUserCount();
     }
-    public static String getCurrentUserList() {
+    public static JSONArray getCurrentUserList() {
         return UserPool.getInstance().getCurrentUserList();
     }
-    public static void removeCurrentUser(WebSocket webSocketId) {
-        UserPool.getInstance().removeCurrentUser(webSocketId);
+    public static void removeCurrentUser(int sessionId) {
+        UserPool.getInstance().removeCurrentUser(sessionId);
     }
-    public static synchronized void currentUserStatusMatching(WebSocket webSocketId) {
-        UserPool.getInstance().currentUserStatusMatching(webSocketId);
+    public static synchronized void currentUserStatusMatching(int sessionId, WebSocket conn) {
+        UserPool.getInstance().currentUserStatusMatching(sessionId, conn);
     }
-    public static synchronized void currentUserStatusJoin(WebSocket webSocketId) {
-        UserPool.getInstance().currentUserStatusJoin(webSocketId);
+    public static synchronized void currentUserStatusJoin(int sessionId, WebSocket conn) {
+        UserPool.getInstance().currentUserStatusJoin(sessionId, conn);
     }
-    public static synchronized void broadCastring() {
 
-    }
 }
 

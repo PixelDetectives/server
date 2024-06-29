@@ -90,6 +90,7 @@ public class CustomWebsocketServer extends WebSocketServer {
                     break;
                 case "getUserCount":
                     conn.send("" + WebSocketHandler.getUserCount());
+
                     break;
                 case "sendChat":
                     String content = request.getString("message");
