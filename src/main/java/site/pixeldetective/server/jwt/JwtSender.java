@@ -60,15 +60,41 @@ public class JwtSender {
         }
     }
 
-
     public static void invalidateJWT(String token) {
         tokenBlacklist.add(token);
+    }
+
+    // JWT에서 uNum을 반환하는 메서드
+    public static Integer getUNumFromJWT(String token) {
+        DecodedJWT decodedJWT = decodeJWT(token);
+        if (decodedJWT != null) {
+            return decodedJWT.getClaim("u_num").asInt();
+        }
+        return null;
+    }
+
+    // JWT에서 uName을 반환하는 메서드
+    public static String getUNameFromJWT(String token) {
+        DecodedJWT decodedJWT = decodeJWT(token);
+        if (decodedJWT != null) {
+            return decodedJWT.getClaim("u_name").asString();
+        }
+        return null;
+    }
+
+    // JWT에서 uId를 반환하는 메서드
+    public static String getUIdFromJWT(String token) {
+        DecodedJWT decodedJWT = decodeJWT(token);
+        if (decodedJWT != null) {
+            return decodedJWT.getClaim("u_id").asString();
+        }
+        return null;
     }
 
     public static void main(String[] args) {
         JwtSender j = new JwtSender();
 
-        String token = j.createJWT("username123", 1, "John Doe", "user123");
+        String token = j.createJWT("user123", 1, "JohnDoe", "user123");
 
         System.out.println("Generated Token: " + token);
 
@@ -77,6 +103,7 @@ public class JwtSender {
         System.out.println("Is token valid? " + isValid);
 
         DecodedJWT decodedJWT = decodeJWT(token);
+
         if (decodedJWT != null) {
             String username = decodedJWT.getSubject();
             int uNum = decodedJWT.getClaim("u_num").asInt();
@@ -88,6 +115,11 @@ public class JwtSender {
             System.out.println("Decoded u_name: " + uName);
             System.out.println("Decoded u_id: " + uId);
         }
+
+        // 각 정보를 반환하는 메서드 호출 예시
+        System.out.println("uNum from JWT: " + getUNumFromJWT(token));
+        System.out.println("uName from JWT: " + getUNameFromJWT(token));
+        System.out.println("uId from JWT: " + getUIdFromJWT(token));
 
         // 토큰을 무효화
         invalidateJWT(token);
