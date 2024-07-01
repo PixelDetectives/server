@@ -43,20 +43,50 @@ public class CustomWebsocketServer extends WebSocketServer {
     // getResourceDescriptor() : 요청 리소스 반환 URI
     // getFieldValue(String name) : 핸드쉐이크 요청 헤더 값
 
-    // 사용자가 입력을 요청할 때
     @Override
     public void onOpen(WebSocket conn, ClientHandshake clientHandshake) {
+        System.out.println("onOpen start");
         try {
             int sessionId = conn.hashCode();
             System.out.println(conn.getRemoteSocketAddress());
-            System.out.println(clientHandshake.getResourceDescriptor());
-            String uId = clientHandshake.getFieldValue("u_id");
-            String uName = clientHandshake.getFieldValue("u_name");
+            String resourceDescriptor = clientHandshake.getResourceDescriptor();
+            System.out.println(resourceDescriptor);
+
+            // 쿼리 파라미터를 파싱
+            String uId = null;
+            String uName = null;
+
+            if (resourceDescriptor != null && resourceDescriptor.contains("?")) {
+                String query = resourceDescriptor.split("\\?")[1];
+                String[] params = query.split("&");
+
+                for (String param : params) {
+                    String[] keyValue = param.split("=");
+                    if (keyValue.length == 2) {
+                        String key = keyValue[0];
+                        String value = keyValue[1];
+                        if (key.equals("u_id")) {
+                            uId = value;
+                        } else if (key.equals("u_name")) {
+                            uName = value;
+                        }
+                    }
+                }
+            }
+
+            System.out.println("u_id:" + uId);
+            System.out.println("u_name:" + uName);
             System.out.println(conn.hashCode() + " " + uId + " " + uName);
-            CurrentUser currentUser = new CurrentUser(uId, uName, "join");
-            UserPool.getInstance().addUser(sessionId, conn, currentUser);
-            WebSocketGameHandler.braodCaseCurrentRoomList();
-            System.out.println("New client connected : " + conn.getRemoteSocketAddress());
+
+            if (uId != null && uName != null) {
+                CurrentUser currentUser = new CurrentUser(uId, uName, "join");
+                UserPool.getInstance().addUser(sessionId, conn, currentUser);
+
+                WebSocketGameHandler.braodCaseCurrentRoomList();
+                System.out.println("New client connected : " + conn.getRemoteSocketAddress());
+            } else {
+                System.out.println("u_id 또는 u_name 값이 없습니다.");
+            }
         } catch (Exception exception) {
             System.out.println(exception.getMessage());
         }
