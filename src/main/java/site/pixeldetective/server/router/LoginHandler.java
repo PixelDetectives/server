@@ -61,7 +61,8 @@ public class LoginHandler implements HttpHandler{
 				// JWT를 받아옴 서버 메서드 호출
 				// 헤더에 저장해서 보내봤는데도 어떻게 안 되서 그냥 이렇게 응답메세지에 보냄
 				String jwt = js.createJWT(rowAffected.getuId(), rowAffected.getuNum(), rowAffected.getuName(), rowAffected.getuId());
-
+				String nickName = rowAffected.getuName();
+				jsonResponse.put("nickName", nickName);
 				jsonResponse.put("jwt", jwt);
 				response = jsonResponse.toString();
 			}

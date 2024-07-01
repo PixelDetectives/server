@@ -5,6 +5,7 @@ import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import site.pixeldetective.server.jwt.JwtSender;
 import site.pixeldetective.websocketserver.gameroom.GameRoom;
 import site.pixeldetective.websocketserver.gameroom.GameRoomPool;
 import site.pixeldetective.websocketserver.handler.ChatHandler;
@@ -95,6 +96,10 @@ public class CustomWebsocketServer extends WebSocketServer {
                 case "sendChat":
                     String content = request.getString("message");
                     CurrentUser currentUser = UserPool.getInstance().getUser(conn.hashCode());
+                    currentUser.setuName(JwtSender.getUNameFromJWT(request.getString("token")));
+                    currentUser.setuId(JwtSender.getUIdFromJWT(request.getString("token")));
+                    System.out.println(currentUser.getuName());
+                    System.out.println(currentUser.getuId());
                     String nickname = currentUser.getuName();
                     ChatHandler.receiveMessage(nickname, content);
                     //conn.send("receive chat " + nickname + " " + content);
@@ -131,7 +136,7 @@ public class CustomWebsocketServer extends WebSocketServer {
                     break;
                 case "joinRoom":
                     int currentUserSessionId1 = request.getInt("currentUserSessionId1");
-//                    WebSocketHandler.currentUserStatusMatching(conn.hashCode(), conn);
+//                  WebSocketHandler.currentUserStatusMatching(conn.hashCode(), conn);
                     GameRoom gameRoom = WebSocketGameHandler.getGameRoomBySessionId1(currentUserSessionId1);
                     gameRoom.setCurrentUser2(conn.hashCode());
                     if (gameRoom == null) {
