@@ -97,7 +97,7 @@ public class CustomWebsocketServer extends WebSocketServer {
                     CurrentUser currentUser = UserPool.getInstance().getUser(conn.hashCode());
                     String nickname = currentUser.getuName();
                     ChatHandler.receiveMessage(nickname, content);
-                    conn.send("receive chat " + nickname + " " + content);
+                    //conn.send("receive chat " + nickname + " " + content);
                     break;
                 case "getCurrentUserList":
                     WebSocketHandler.getCurrentUserList();
