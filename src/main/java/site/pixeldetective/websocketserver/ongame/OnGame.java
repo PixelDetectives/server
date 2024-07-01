@@ -4,13 +4,12 @@ import org.json.JSONObject;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class OnGame {
 
     private int onGameId;
 
-    private int sessionId1;
-    private int sessionId2;
 
     public Map<Integer, List<Integer>> answers;
     private String myName;
@@ -19,25 +18,19 @@ public class OnGame {
     private String imgURL1;
     private String imgURL2;
     private int TOTAL_HITS;
-    private int user1Hits = 0;
-    private int user1Miss = 0;
 
-    private int user2Hits = 0;
 
-    private int user2Miss = 0;
+
+    private int userHits = 0;
+    private int userMiss = 0;
 
     private int difficulty;
 
-
-
     private long startTime;
+
+    private List<Boolean> answerMark;
     public OnGame() {
 
-    }
-    public OnGame(int sessionId1, int sessionId2, int difficulty) {
-        this.sessionId1 = sessionId1;
-        this.sessionId2 = sessionId2;
-        this.difficulty = difficulty;
     }
     public String getImgURL1() {
         return imgURL1;
@@ -63,44 +56,14 @@ public class OnGame {
         this.TOTAL_HITS = TOTAL_HITS;
     }
 
-    public int getUser1Hits() {
-        return user1Hits;
-    }
 
-    public void setUser1Hits(int user1Hits) {
-        this.user1Hits = user1Hits;
-    }
 
-    public int getUser1Miss() {
-        return user1Miss;
-    }
-
-    public void setUser1Miss(int user1Miss) {
-        this.user1Miss = user1Miss;
-    }
-
-    public int getUser2Hits() {
-        return user2Hits;
-    }
-
-    public void setUser2Hits(int user2Hits) {
-        this.user2Hits = user2Hits;
-    }
     public int getOnGameId() {
         return onGameId;
     }
 
     public void setOnGameId(int onGameId) {
         this.onGameId = onGameId;
-    }
-
-
-    public int getSessionId1() {
-        return sessionId1;
-    }
-
-    public void setSessionId1(int sessionId1) {
-        this.sessionId1 = sessionId1;
     }
 
 
@@ -112,21 +75,8 @@ public class OnGame {
     public void setDifficulty(int difficulty) {
         this.difficulty = difficulty;
     }
-    public int getSessionId2() {
-        return sessionId2;
-    }
 
-    public void setSessionId2(int sessionId2) {
-        this.sessionId2 = sessionId2;
-    }
 
-    public int getUser2Miss() {
-        return user2Miss;
-    }
-
-    public void setUser2Miss(int user2Miss) {
-        this.user2Miss = user2Miss;
-    }
 
     public String getMyName() {
         return myName;
@@ -157,21 +107,40 @@ public class OnGame {
     public void setStartTime(long startTime) {
         this.startTime = startTime;
     }
+    public List<Boolean> getAnswerMark() {
+        return answerMark;
+    }
+
+    public void setAnswerMark(List<Boolean> answerMark) {
+        this.answerMark = answerMark;
+    }
+    public int getUserHits() {
+        return userHits;
+    }
+
+    public void setUserHits(int userHits) {
+        this.userHits = userHits;
+    }
+
+    public int getUserMiss() {
+        return userMiss;
+    }
+
+    public void setUserMiss(int userMiss) {
+        this.userMiss = userMiss;
+    }
     @Override
     public String toString() {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("sessionId1", sessionId1);
-        jsonObject.put("sessionId2", sessionId2);
+        jsonObject.put("onGameId", onGameId);
         jsonObject.put("answers", answers);
         jsonObject.put("myName", myName);
         jsonObject.put("otherName", otherName);
         jsonObject.put("imgURL1", imgURL1);
         jsonObject.put("imgURL2", imgURL2);
         jsonObject.put("TOTAL_HITS", TOTAL_HITS);
-        jsonObject.put("user1Hits", user1Hits);
-        jsonObject.put("user1Miss", user1Miss);
-        jsonObject.put("user2Hits", user2Hits);
-        jsonObject.put("user2Miss", user2Miss);
+        jsonObject.put("userHits", userHits);
+        jsonObject.put("userMiss", userMiss);
         jsonObject.put("difficulty", difficulty);
         jsonObject.put("onGameId", onGameId);
         jsonObject.put("startTime", startTime);

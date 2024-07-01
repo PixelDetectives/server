@@ -29,7 +29,7 @@ public class GameRoomPool {
             gameRoom.setRoomName(roomName);
             gameRoom.setCurrentUser1(sessionId);
             currentCreatedRooms.put(sessionId, gameRoom);
-            System.out.println(gameRoom.toString());
+
             return true;
         } catch (Exception e) {
             System.out.println(e.getMessage());

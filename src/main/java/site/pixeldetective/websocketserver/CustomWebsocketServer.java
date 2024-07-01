@@ -9,6 +9,7 @@ import site.pixeldetective.server.jwt.JwtSender;
 import site.pixeldetective.websocketserver.gameroom.GameRoom;
 import site.pixeldetective.websocketserver.gameroom.GameRoomPool;
 import site.pixeldetective.websocketserver.handler.ChatHandler;
+import site.pixeldetective.websocketserver.handler.OnGameHandler;
 import site.pixeldetective.websocketserver.handler.WebSocketGameHandler;
 import site.pixeldetective.websocketserver.handler.WebSocketHandler;
 //import site.pixeldetective.websocketserver.httpconnect.HttpConnector;
@@ -165,82 +166,127 @@ public class CustomWebsocketServer extends WebSocketServer {
                     conn.send(jsonObject.toString());
                     break;
                 case "joinRoom":
-                    int currentUserSessionId1 = request.getInt("currentUserSessionId1");
-//                  WebSocketHandler.currentUserStatusMatching(conn.hashCode(), conn);
-                    GameRoom gameRoom = WebSocketGameHandler.getGameRoomBySessionId1(currentUserSessionId1);
-                    gameRoom.setCurrentUser2(conn.hashCode());
-                    if (gameRoom == null) {
-                        conn.send("could not found");
-                    } else {
-                        int currentUser1 = gameRoom.getCurrentUser1();
-                        int currentUser2 = gameRoom.getCurrentUser2();
-                        jsonObject = new JSONObject();
-                        jsonObject.put("type", "gameStart");
-                        jsonObject.put("status", "success");
-                        UserPool.getInstance().getConnection(currentUser1).send(jsonObject.toString());
-                        UserPool.getInstance().getConnection(currentUser2).send(jsonObject.toString());
-                        int gameRoomId = gameRoom.hashCode();
-                        OnGame onGame = OnGamePool.createOnGame(gameRoomId, currentUser1, currentUser2, gameRoom.getDifficulty());
-                        jsonObject = new JSONObject();
-                        jsonObject.put("type", "gameData");
-                        JSONObject gameData = new JSONObject(onGame.toString());
-                        jsonObject.put("data", gameData);
-                        UserPool.getInstance().getConnection(currentUser1).send(jsonObject.toString());
-                        UserPool.getInstance().getConnection(currentUser2).send(jsonObject.toString());
-                        WebSocketGameHandler.deleteGameRoomBySessionId1(currentUserSessionId1);
-                    }
+//                    int currentUserSessionId1 = request.getInt("currentUserSessionId1");
+////                  WebSocketHandler.currentUserStatusMatching(conn.hashCode(), conn);
+//                    GameRoom gameRoom = WebSocketGameHandler.getGameRoomBySessionId1(currentUserSessionId1);
+//                    gameRoom.setCurrentUser2(conn.hashCode());
+//                    if (gameRoom == null) {
+//                        conn.send("could not found");
+//                    } else {
+//                        int currentUser1 = gameRoom.getCurrentUser1();
+//                        int currentUser2 = gameRoom.getCurrentUser2();
+//                        jsonObject = new JSONObject();
+//                        jsonObject.put("type", "gameStart");
+//                        jsonObject.put("status", "success");
+//                        UserPool.getInstance().getConnection(currentUser1).send(jsonObject.toString());
+//                        UserPool.getInstance().getConnection(currentUser2).send(jsonObject.toString());
+//                        int gameRoomId = gameRoom.hashCode();
+//                        OnGame onGame = OnGamePool.createOnGame(gameRoomId, currentUser1, currentUser2, gameRoom.getDifficulty());
+//                        jsonObject = new JSONObject();
+//                        jsonObject.put("type", "gameData");
+//                        JSONObject gameData = new JSONObject(onGame.toString());
+//                        jsonObject.put("data", gameData);
+//                        UserPool.getInstance().getConnection(currentUser1).send(jsonObject.toString());
+//                        UserPool.getInstance().getConnection(currentUser2).send(jsonObject.toString());
+//                        WebSocketGameHandler.deleteGameRoomBySessionId1(currentUserSessionId1);
+//                    }
                     break;
                 case "roomDelete":
                     int currentUserSessionId = request.getInt("currentUserSessionId");
                     conn.send("server close room");
                     System.out.println("server try roomDelete");
                 case "gameOver":
-                    JSONObject userData = new JSONObject();
-                    long endTime = System.currentTimeMillis();
-                    int onGameId = request.getInt("onGameId");
-                    OnGame onGame = OnGamePool.getInstance().getOnGameByOnGameId(onGameId);
-                    jsonObject = new JSONObject();
-                    String user1Result = "";
+//                    JSONObject userData = new JSONObject();
+//                    long endTime = System.currentTimeMillis();
+//                    int onGameId = request.getInt("onGameId");
+//                    OnGame onGame = OnGamePool.getInstance().getOnGameByOnGameId(onGameId);
+//                    jsonObject = new JSONObject();
+//                    String user1Result = "";
+//
+//                    String user2Result = "";
+//                    if (onGame.getUser1Hits() > onGame.getUser2Hits()) {
+//                        user1Result = "WIN";
+//                        user2Result = "LOSE";
+//                    } else if (onGame.getUser1Hits() == onGame.getUser2Hits()) {
+//                        if (onGame.getUser1Miss() < onGame.getUser2Miss()) {
+//                            user1Result = "WIN";
+//                            user2Result = "LOSE";
+//                        } else if ((onGame.getUser1Miss() == onGame.getUser2Miss())){
+//                            user1Result = "DRAW";
+//                            user2Result = "DRAW";
+//                        } else {
+//                            user1Result = "LOSE";
+//                            user2Result = "WIN";
+//                        }
+//                    } else {
+//                        user1Result = "LOSE";
+//                        user2Result = "WIN";
+//                    }
+//                    jsonObject.put("type", "gameOver");
+//                    JSONObject gameData = new JSONObject(onGame.toString());
+//                    userData.put("hits", gameData.getInt("user1Hits"));
+//                    userData.put("miss", gameData.getInt("user1Miss"));
+//                    userData.put("total", gameData.getInt("user1Hits") + gameData.getInt("user1Miss"));
+//
+//                    userData.put("time",  (int) (endTime - gameData.getLong("startTime")) / 1000);
+//                    userData.put("result", user1Result);
+//                    jsonObject.put("data", userData);
+//                    UserPool.getInstance().getConnection(onGame.getSessionId1()).send(jsonObject.toString());                    jsonObject = new JSONObject();
+//                    jsonObject = new JSONObject();
+//                    userData = new JSONObject();
+//                    jsonObject.put("type", "gameOver");
+//                    userData.put("hits", gameData.getInt("user2Hits"));
+//                    userData.put("miss", gameData.getInt("user2Miss"));
+//                    userData.put("total", gameData.getInt("user2Hits") + gameData.getInt("user2Miss"));
+//                    userData.put("time", (int) (endTime - gameData.getLong("startTime")) / 1000);
+//                    userData.put("result", user2Result);
+//                    jsonObject.put("data", userData);
+//                    UserPool.getInstance().getConnection(onGame.getSessionId2()).send(jsonObject.toString());
+                    break;
+                case "quickMatching":
+                    System.out.println("quickMatching " + "by " + conn.hashCode());
+                    JSONObject jsonObject1 = new JSONObject();
+                    jsonObject1.put("type", "quickMatching");
+                    UserPool.getInstance().currentUserStatusMatching(conn.hashCode(), conn);
+                    WebSocket otherConn = UserPool.getInstance().getUserStatusMatching(conn);
+                    if (otherConn != null) {
+                        CurrentUser otherUser = UserPool.getInstance().getUser(otherConn.hashCode());
+                        CurrentUser hostUser = UserPool.getInstance().getUser(conn.hashCode());
+                        String gameQuickMatchingString = OnGameHandler.getInstance().getGameByRandomDifficulty();
+                        JSONObject gameQuickMatching = new JSONObject(gameQuickMatchingString);
+                        gameQuickMatching.put("myName", hostUser.getuName());
+                        gameQuickMatching.put("otherName", otherUser.getuName());
 
-                    String user2Result = "";
-                    if (onGame.getUser1Hits() > onGame.getUser2Hits()) {
-                        user1Result = "WIN";
-                        user2Result = "LOSE";
-                    } else if (onGame.getUser1Hits() == onGame.getUser2Hits()) {
-                        if (onGame.getUser1Miss() < onGame.getUser2Miss()) {
-                            user1Result = "WIN";
-                            user2Result = "LOSE";
-                        } else if ((onGame.getUser1Miss() == onGame.getUser2Miss())){
-                            user1Result = "DRAW";
-                            user2Result = "DRAW";
-                        } else {
-                            user1Result = "LOSE";
-                            user2Result = "WIN";
-                        }
-                    } else {
-                        user1Result = "LOSE";
-                        user2Result = "WIN";
+                        jsonObject1.put("data", gameQuickMatching.toString());
+                        conn.send(jsonObject1.toString());
+                        gameQuickMatching.put("myName", otherUser.getuName());
+                        gameQuickMatching.put("otherName", hostUser.getuName());
+                        jsonObject1.put("data", gameQuickMatching.toString());
+                        System.out.println(jsonObject1.toString());
+                        otherConn.send(jsonObject1.toString());
+                        UserPool.getInstance().setMatchedUsers(conn.hashCode(), otherConn.hashCode(), gameQuickMatchingString);
+
                     }
-                    jsonObject.put("type", "gameOver");
-                    JSONObject gameData = new JSONObject(onGame.toString());
-                    userData.put("hits", gameData.getInt("user1Hits"));
-                    userData.put("miss", gameData.getInt("user1Miss"));
-                    userData.put("total", gameData.getInt("user1Hits") + gameData.getInt("user1Miss"));
+                    break;
+                case "gamePoint":
+                    JSONObject data = request.getJSONObject("data");
+                    int x = data.getInt("x");
+                    int y = data.getInt("y");
 
-                    userData.put("time",  (int) (endTime - gameData.getLong("startTime")) / 1000);
-                    userData.put("result", user1Result);
-                    jsonObject.put("data", userData);
-                    UserPool.getInstance().getConnection(onGame.getSessionId1()).send(jsonObject.toString());                    jsonObject = new JSONObject();
-                    jsonObject = new JSONObject();
-                    userData = new JSONObject();
-                    jsonObject.put("type", "gameOver");
-                    userData.put("hits", gameData.getInt("user2Hits"));
-                    userData.put("miss", gameData.getInt("user2Miss"));
-                    userData.put("total", gameData.getInt("user2Hits") + gameData.getInt("user2Miss"));
-                    userData.put("time", (int) (endTime - gameData.getLong("startTime")) / 1000);
-                    userData.put("result", user2Result);
-                    jsonObject.put("data", userData);
-                    UserPool.getInstance().getConnection(onGame.getSessionId2()).send(jsonObject.toString());
+                    JSONObject resultGamePointer = new JSONObject();
+                    resultGamePointer.put("x", x);
+                    resultGamePointer.put("y", y);
+
+                    Integer matchedUserId = UserPool.getInstance().matchedUsers.get(conn.hashCode());
+                    JSONObject jsonObject2 = OnGamePool.checkAndReturnResult(conn.hashCode(), matchedUserId, x, y);
+                    JSONObject retPointer = new JSONObject();
+                    retPointer.put("type", "pointResult");
+                    retPointer.put("data", jsonObject2.toString());
+                    if (matchedUserId != null) {
+                        WebSocket matchedConn = UserPool.getInstance().getConnection(matchedUserId);
+                        matchedConn.send(retPointer.toString());
+                    }
+                    conn.send(retPointer.toString());
                     break;
                 default:
                     break;
