@@ -221,6 +221,7 @@ public class CustomWebsocketServer extends WebSocketServer {
                         gameData.put("myMiss", otherData.getInt("miss"));
                         gameData.put("otherHits", userData.getInt("hits"));
                         gameData.put("otherMiss", userData.getInt("miss"));
+                        gameData.put("time", endTime - startTime);
                         gameData.put("otherNickName", UserPool.getInstance().getUser(conn.hashCode()).getuName());
                         gameData.put("myNickName", UserPool.getInstance().getUser(matchConn.hashCode()).getuName());
                         gameResult.put("data", gameData.toString());
