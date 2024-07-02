@@ -13,6 +13,7 @@ import site.pixeldetective.websocketserver.handler.OnGameHandler;
 import site.pixeldetective.websocketserver.handler.WebSocketGameHandler;
 import site.pixeldetective.websocketserver.handler.WebSocketHandler;
 //import site.pixeldetective.websocketserver.httpconnect.HttpConnector;
+import site.pixeldetective.websocketserver.match.Match;
 import site.pixeldetective.websocketserver.match.MatchPool;
 import site.pixeldetective.websocketserver.ongame.OnGame;
 import site.pixeldetective.websocketserver.ongame.OnGamePool;
@@ -196,36 +197,42 @@ public class CustomWebsocketServer extends WebSocketServer {
                     conn.send("server close room");
                     System.out.println("server try roomDelete");
                 case "gameOver":
-                    JSONObject userData = new JSONObject(request.getString("data"));
-                    System.out.println("userData : " + userData.toString());
-                    long endTime = System.currentTimeMillis();
-                    long startTime = OnGamePool.getOnGameByOnGameId(conn.hashCode()).getStartTime();
-                    MatchPool.getInstance().setMyData(conn.hashCode(), userData);
-                    WebSocket matchConn = UserPool.getInstance().getMatchedUser(conn.hashCode());
-                    JSONObject gameResult = new JSONObject();
-                    gameResult.put("type", "gameResult");
-                    if (MatchPool.getInstance().isSessionIdInMatchPool(matchConn.hashCode())) {
-                        JSONObject otherData = MatchPool.getInstance().getOtherData( matchConn.hashCode());
-                        JSONObject gameData = new JSONObject();
-                        gameData.put("myHits", userData.getInt("hits"));
-                        gameData.put("myMiss", userData.getInt("miss"));
-                        gameData.put("otherHits", otherData.getInt("hits"));
-                        gameData.put("otherMiss", otherData.getInt("miss"));
-                        gameData.put("time", endTime - startTime);
-                        gameData.put("myNickName", UserPool.getInstance().getUser(conn.hashCode()).getuName());
-                        gameData.put("otherNickName", UserPool.getInstance().getUser(matchConn.hashCode()).getuName());
-                        gameResult.put("data", gameData.toString());
-                        conn.send(gameResult.toString());
-                        gameData = new JSONObject();
-                        gameData.put("myHits", otherData.getInt("hits"));
-                        gameData.put("myMiss", otherData.getInt("miss"));
-                        gameData.put("otherHits", userData.getInt("hits"));
-                        gameData.put("otherMiss", userData.getInt("miss"));
-                        gameData.put("time", endTime - startTime);
-                        gameData.put("otherNickName", UserPool.getInstance().getUser(conn.hashCode()).getuName());
-                        gameData.put("myNickName", UserPool.getInstance().getUser(matchConn.hashCode()).getuName());
-                        gameResult.put("data", gameData.toString());
-                        matchConn.send(gameResult.toString());
+                    synchronized (this) {
+                        JSONObject userData = new JSONObject(request.getString("data"));
+                        System.out.println("userData : " + userData.toString());
+                        long endTime = System.currentTimeMillis();
+                        long startTime = OnGamePool.getOnGameByOnGameId(conn.hashCode()).getStartTime();
+                        MatchPool.getInstance().setMyData(conn.hashCode(), userData);
+                        WebSocket matchConn = UserPool.getInstance().getMatchedUser(conn.hashCode());
+                        if (MatchPool.getInstance().isSessionIdInMatchPool(matchConn.hashCode())) {
+                            JSONObject gameResult = new JSONObject();
+                            gameResult.put("type", "gameResult");
+                            JSONObject otherData = MatchPool.getInstance().getOtherData(matchConn.hashCode());
+                            JSONObject gameData = new JSONObject();
+                            gameData.put("myHits", userData.getInt("hits"));
+                            gameData.put("myMiss", userData.getInt("miss"));
+                            gameData.put("otherHits", otherData.getInt("hits"));
+                            gameData.put("otherMiss", otherData.getInt("miss"));
+                            gameData.put("time", endTime - startTime);
+                            gameData.put("myNickName", UserPool.getInstance().getUser(conn.hashCode()).getuName());
+                            gameData.put("otherNickName", UserPool.getInstance().getUser(matchConn.hashCode()).getuName());
+                            gameResult.put("data", gameData.toString());
+                            conn.send(gameResult.toString());
+                            gameData = new JSONObject();
+                            gameData.put("myHits", otherData.getInt("hits"));
+                            gameData.put("myMiss", otherData.getInt("miss"));
+                            gameData.put("otherHits", userData.getInt("hits"));
+                            gameData.put("otherMiss", userData.getInt("miss"));
+                            gameData.put("time", endTime - startTime);
+                            gameData.put("otherNickName", UserPool.getInstance().getUser(conn.hashCode()).getuName());
+                            gameData.put("myNickName", UserPool.getInstance().getUser(matchConn.hashCode()).getuName());
+                            gameResult.put("data", gameData.toString());
+                            matchConn.send(gameResult.toString());
+                        } else {
+                            JSONObject jsonObject1 = new JSONObject();
+                            jsonObject1.put("type", "null");
+                            conn.send(jsonObject1.toString());
+                        }
                     }
                     break;
                 case "quickMatching":

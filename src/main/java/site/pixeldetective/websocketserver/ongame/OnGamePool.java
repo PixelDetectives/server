@@ -92,7 +92,6 @@ public class OnGamePool {
             myOngame.getAnswerMark().set(minIdx, true);
         }
         jsonObject.put("currUserName", UserPool.getInstance().getUser(mySessionId).getuName());
-        System.out.println(jsonObject.toString());
         return jsonObject;
     }
     public void deleteOnGamePool(int sessionId) {

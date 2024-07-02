@@ -34,7 +34,7 @@ public class MatchPool {
         return matchPool.containsKey(sessionId);
     }
 
-    public void delete (int sessionId1, int sessionId2) {
+    public void delete(int sessionId1, int sessionId2) {
         matchPool.remove(sessionId1);
         matchPool.remove(sessionId2);
     }
