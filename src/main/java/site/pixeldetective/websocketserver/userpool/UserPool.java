@@ -162,4 +162,10 @@ public class UserPool {
     public synchronized WebSocket getMatchedUser(int sessionId) {
         return currentConnections.get(matchedUsers.get(sessionId));
     }
+    public synchronized void currentUserStatusGaming(int sessionId, WebSocket ws) {
+        CurrentUser currentUser = UserPool.getInstance().getUser(sessionId);
+        removeCurrentUser(sessionId);
+        currentUser.setStatus("Gaming");
+        addUser(sessionId, ws, currentUser);
+    }
 }

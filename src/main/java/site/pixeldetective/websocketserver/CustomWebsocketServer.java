@@ -235,6 +235,9 @@ public class CustomWebsocketServer extends WebSocketServer {
                             UserPool.getInstance().clearMatchedUsers(conn.hashCode());
                             UserPool.getInstance().clearMatchedUsers(matchConn.hashCode());
 
+                            UserPool.getInstance().currentUserStatusJoin(conn.hashCode(), conn);
+                            UserPool.getInstance().currentUserStatusJoin(matchConn.hashCode(), matchConn);
+
                         } else {
                             JSONObject jsonObject1 = new JSONObject();
                             jsonObject1.put("type", "null");
@@ -251,6 +254,8 @@ public class CustomWebsocketServer extends WebSocketServer {
                     if (otherConn != null) {
                         CurrentUser otherUser = UserPool.getInstance().getUser(otherConn.hashCode());
                         CurrentUser hostUser = UserPool.getInstance().getUser(conn.hashCode());
+                        UserPool.getInstance().currentUserStatusGaming(otherConn.hashCode(), otherConn);
+                        UserPool.getInstance().currentUserStatusGaming(conn.hashCode(), conn);
                         String gameQuickMatchingString = OnGameHandler.getInstance().getGameByRandomDifficulty();
                         JSONObject gameQuickMatching = new JSONObject(gameQuickMatchingString);
                         gameQuickMatching.put("myName", hostUser.getuName());
