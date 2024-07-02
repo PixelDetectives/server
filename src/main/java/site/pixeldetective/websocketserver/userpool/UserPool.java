@@ -158,4 +158,7 @@ public class UserPool {
             matchedUsers.remove(matchedSessionId);
         }
     }
+    public synchronized WebSocket getMatchedUser(int sessionId) {
+        return currentConnections.get(matchedUsers.get(sessionId));
+    }
 }

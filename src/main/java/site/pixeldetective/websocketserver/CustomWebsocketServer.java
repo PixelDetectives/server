@@ -13,6 +13,7 @@ import site.pixeldetective.websocketserver.handler.OnGameHandler;
 import site.pixeldetective.websocketserver.handler.WebSocketGameHandler;
 import site.pixeldetective.websocketserver.handler.WebSocketHandler;
 //import site.pixeldetective.websocketserver.httpconnect.HttpConnector;
+import site.pixeldetective.websocketserver.match.MatchPool;
 import site.pixeldetective.websocketserver.ongame.OnGame;
 import site.pixeldetective.websocketserver.ongame.OnGamePool;
 import site.pixeldetective.websocketserver.userpool.CurrentUser;
@@ -122,7 +123,6 @@ public class CustomWebsocketServer extends WebSocketServer {
                     break;
                 case "getUserCount":
                     conn.send("" + WebSocketHandler.getUserCount());
-
                     break;
                 case "sendChat":
                     String content = request.getString("message");
@@ -196,52 +196,36 @@ public class CustomWebsocketServer extends WebSocketServer {
                     conn.send("server close room");
                     System.out.println("server try roomDelete");
                 case "gameOver":
-//                    JSONObject userData = new JSONObject();
-//                    long endTime = System.currentTimeMillis();
-//                    int onGameId = request.getInt("onGameId");
-//                    OnGame onGame = OnGamePool.getInstance().getOnGameByOnGameId(onGameId);
-//                    jsonObject = new JSONObject();
-//                    String user1Result = "";
-//
-//                    String user2Result = "";
-//                    if (onGame.getUser1Hits() > onGame.getUser2Hits()) {
-//                        user1Result = "WIN";
-//                        user2Result = "LOSE";
-//                    } else if (onGame.getUser1Hits() == onGame.getUser2Hits()) {
-//                        if (onGame.getUser1Miss() < onGame.getUser2Miss()) {
-//                            user1Result = "WIN";
-//                            user2Result = "LOSE";
-//                        } else if ((onGame.getUser1Miss() == onGame.getUser2Miss())){
-//                            user1Result = "DRAW";
-//                            user2Result = "DRAW";
-//                        } else {
-//                            user1Result = "LOSE";
-//                            user2Result = "WIN";
-//                        }
-//                    } else {
-//                        user1Result = "LOSE";
-//                        user2Result = "WIN";
-//                    }
-//                    jsonObject.put("type", "gameOver");
-//                    JSONObject gameData = new JSONObject(onGame.toString());
-//                    userData.put("hits", gameData.getInt("user1Hits"));
-//                    userData.put("miss", gameData.getInt("user1Miss"));
-//                    userData.put("total", gameData.getInt("user1Hits") + gameData.getInt("user1Miss"));
-//
-//                    userData.put("time",  (int) (endTime - gameData.getLong("startTime")) / 1000);
-//                    userData.put("result", user1Result);
-//                    jsonObject.put("data", userData);
-//                    UserPool.getInstance().getConnection(onGame.getSessionId1()).send(jsonObject.toString());                    jsonObject = new JSONObject();
-//                    jsonObject = new JSONObject();
-//                    userData = new JSONObject();
-//                    jsonObject.put("type", "gameOver");
-//                    userData.put("hits", gameData.getInt("user2Hits"));
-//                    userData.put("miss", gameData.getInt("user2Miss"));
-//                    userData.put("total", gameData.getInt("user2Hits") + gameData.getInt("user2Miss"));
-//                    userData.put("time", (int) (endTime - gameData.getLong("startTime")) / 1000);
-//                    userData.put("result", user2Result);
-//                    jsonObject.put("data", userData);
-//                    UserPool.getInstance().getConnection(onGame.getSessionId2()).send(jsonObject.toString());
+                    JSONObject userData = new JSONObject(request.getString("data"));
+                    System.out.println("userData : " + userData.toString());
+                    long endTime = System.currentTimeMillis();
+                    long startTime = OnGamePool.getOnGameByOnGameId(conn.hashCode()).getStartTime();
+                    MatchPool.getInstance().setMyData(conn.hashCode(), userData);
+                    WebSocket matchConn = UserPool.getInstance().getMatchedUser(conn.hashCode());
+                    JSONObject gameResult = new JSONObject();
+                    gameResult.put("type", "gameResult");
+                    if (MatchPool.getInstance().isSessionIdInMatchPool(matchConn.hashCode())) {
+                        JSONObject otherData = MatchPool.getInstance().getOtherData( matchConn.hashCode());
+                        JSONObject gameData = new JSONObject();
+                        gameData.put("myHits", userData.getInt("hits"));
+                        gameData.put("myMiss", userData.getInt("miss"));
+                        gameData.put("otherHits", otherData.getInt("hits"));
+                        gameData.put("otherMiss", otherData.getInt("miss"));
+                        gameData.put("time", endTime - startTime);
+                        gameData.put("myNickName", UserPool.getInstance().getUser(conn.hashCode()).getuName());
+                        gameData.put("otherNickName", UserPool.getInstance().getUser(matchConn.hashCode()).getuName());
+                        gameResult.put("data", gameData.toString());
+                        conn.send(gameResult.toString());
+                        gameData = new JSONObject();
+                        gameData.put("myHits", otherData.getInt("hits"));
+                        gameData.put("myMiss", otherData.getInt("miss"));
+                        gameData.put("otherHits", userData.getInt("hits"));
+                        gameData.put("otherMiss", userData.getInt("miss"));
+                        gameData.put("otherNickName", UserPool.getInstance().getUser(conn.hashCode()).getuName());
+                        gameData.put("myNickName", UserPool.getInstance().getUser(matchConn.hashCode()).getuName());
+                        gameResult.put("data", gameData.toString());
+                        matchConn.send(gameResult.toString());
+                    }
                     break;
                 case "quickMatching":
                     System.out.println("quickMatching " + "by " + conn.hashCode());
@@ -303,9 +287,7 @@ public class CustomWebsocketServer extends WebSocketServer {
     }
     // websocket 서버가 실행됨
     @Override
-    public void onStart() {
-        System.out.println("Websocket Server started on port " + PORT);
-    }
+    public void onStart() {}
 }
 
 

@@ -95,4 +95,7 @@ public class OnGamePool {
         System.out.println(jsonObject.toString());
         return jsonObject;
     }
+    public void deleteOnGamePool(int sessionId) {
+        onGamePool.remove(sessionId);
+    }
 }

@@ -3,6 +3,8 @@ package site.pixeldetective.server.router;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.json.JSONObject;
+import site.pixeldetective.server.dao.GameDAO;
+import site.pixeldetective.server.dto.GameDTO;
 import site.pixeldetective.server.dto.TestDTO;
 
 import java.io.BufferedReader;
@@ -21,17 +23,16 @@ public class TestHandler implements HttpHandler {
         String response = "";
         int statusCode = 200;
         if (exchange.getRequestMethod().equalsIgnoreCase("GET")) {
-            TestDAO testDAO = new TestDAO();
-            List<TestDTO> testList = testDAO.getAllTests();
-            // JSON으로 변환
-            JSONArray jsonArray = new JSONArray();
-            for (TestDTO test : testList) {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("id", test.getId());
-                jsonObject.put("name", test.getName());
-                jsonArray.put(jsonObject);
-            }
-            response = jsonArray.toString();
+
+            GameDTO gameDTO = new TestDAO().getGame();
+
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("gName", gameDTO.getG_name());
+            jsonObject.put("gNum", gameDTO.getG_num());
+            jsonObject.put("gImage1", gameDTO.getG_image1());
+            jsonObject.put("gImage2", gameDTO.getG_image2());
+            jsonObject.put("gDifficulty", gameDTO.getG_difficulty());
+            response = jsonObject.toString();
         } else if (exchange.getRequestMethod().equalsIgnoreCase("POST")) {
             // 요청에 바디에 있는 데이터 utf-8 인코딩으로 읽어온다.
             InputStreamReader isr = new InputStreamReader(exchange.getRequestBody(), "utf-8");

@@ -43,6 +43,8 @@ public class GameDAO {
 	public GameDTO randomGames() throws SQLException {
 		GameDTO game = new GameDTO();
 		String getGameSQL = "SELECT * FROM game ORDER BY RAND() LIMIT 1";
+//		String getGameSQL = "SELECT * FROM game WHERE g_num = 4";
+
 		try (Connection conn = DBConnector.returnConnection();
 			 PreparedStatement pstmt = conn.prepareStatement(getGameSQL);
 			 ResultSet rs = pstmt.executeQuery();

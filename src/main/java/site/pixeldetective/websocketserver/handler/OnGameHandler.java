@@ -37,4 +37,13 @@ public class OnGameHandler {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         return response.body();
     }
+    public String getGame() throws IOException, InterruptedException, URISyntaxException {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(new URI(baseUri + "/test"))
+                .GET()
+                .build();
+        HttpClient client = HttpClient.newHttpClient();
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        return response.body();
+    }
 }

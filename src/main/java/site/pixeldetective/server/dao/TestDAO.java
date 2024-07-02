@@ -4,6 +4,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import site.pixeldetective.server.dto.GameDTO;
 import site.pixeldetective.server.dto.TestDTO;
 import site.pixeldetective.server.db.DBConnector;
 
@@ -76,4 +77,28 @@ public class TestDAO {
         }
     }
 
+    public GameDTO getGame() {
+        GameDTO game = new GameDTO();
+        String getGameSQL = "SELECT * FROM game WHERE g_num = 4";
+        try (Connection conn = DBConnector.returnConnection();
+             PreparedStatement pstmt = conn.prepareStatement(getGameSQL);
+             ResultSet rs = pstmt.executeQuery();
+        ){
+            if (rs.next()) {
+                int g_num = rs.getInt("g_num");
+                String g_image1 = rs.getString("g_image1");
+                String g_image2 = rs.getString("g_image2");
+                String g_name = rs.getString("g_name");
+                int g_difficulty = rs.getInt("g_difficulty");
+                game = new GameDTO(g_num, g_image1, g_image2, g_name, g_difficulty);
+            }
+        }catch (SQLException e) {
+            try {
+                throw new SQLException(e);
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+        return game;
+    }
 }
