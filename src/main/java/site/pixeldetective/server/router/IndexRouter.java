@@ -66,6 +66,9 @@ public class IndexRouter implements HttpHandler {
                 case "/user":
                     handler = new UserInfoHander();
                     break;
+                case "/game/random":
+                    handler = new RandomGameHander();
+                    break;
                 default:
                     handler = new NotFoundHandler();
                     break;

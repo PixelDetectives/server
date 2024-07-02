@@ -3,14 +3,20 @@ package site.pixeldetective.websocketserver.userpool;
 import org.java_websocket.WebSocket;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import site.pixeldetective.websocketserver.ongame.OnGame;
+import site.pixeldetective.websocketserver.ongame.OnGamePool;
 
+import java.awt.*;
+import java.util.ArrayList;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
-
+import java.util.UUID;
 public class UserPool {
     // 사용자 정보를 저장하는 ConcurrentHashMap
     private static volatile ConcurrentHashMap<Integer, WebSocket> currentConnections = new ConcurrentHashMap<>();
     private static volatile  ConcurrentHashMap<Integer, CurrentUser> currentUsers = new ConcurrentHashMap<>();
+    public static volatile ConcurrentHashMap<Integer, Integer> matchedUsers = new ConcurrentHashMap<>();
 
     private static UserPool instance;
 
@@ -112,6 +118,44 @@ public class UserPool {
         retObject.put("data", jsonArray.toString());
         for (int sessionId : currentConnections.keySet()) {
             currentConnections.get(sessionId).send(retObject.toString());
+        }
+    }
+    public synchronized void updateUserInfo(WebSocket conn, String uId, String uName) {
+        CurrentUser currentUser = currentUsers.get(conn.hashCode());
+        currentUser.setuId(uId);
+        currentUser.setuName(uName);
+        System.out.println(uId + " " + uName);
+    }
+    public synchronized String currUserName(WebSocket conn) {
+        CurrentUser currentUser = UserPool.currentUsers.get(conn.hashCode());
+        return currentUser.getuName();
+    }
+    public synchronized WebSocket getUserStatusMatching(WebSocket conn) {
+        java.util.List<Integer> currentUserList = new ArrayList<>();
+        for (int key : currentUsers.keySet()) {
+            if (key != conn.hashCode() && currentUsers.get(key).getStatus().equals("Matching")) {
+                currentUserList.add(key);
+            }
+        }
+        if (!currentUserList.isEmpty()) {
+            int otherConn = currentUserList.get(new Random().nextInt(currentUserList.size()));
+            currentUsers.get(otherConn).setStatus("Join");
+            return currentConnections.get(otherConn);
+        } else {
+            return null;
+        }
+    }
+    public synchronized void setMatchedUsers(int sessionId1, int sessionId2, String gameQuickMatching) {
+        matchedUsers.put(sessionId1, sessionId2);
+        matchedUsers.put(sessionId2, sessionId1);
+        JSONObject jsonObject = new JSONObject(gameQuickMatching);
+        OnGamePool.createOnGame(sessionId1, jsonObject);
+        OnGamePool.createOnGame(sessionId2, jsonObject);
+    }
+    public synchronized void clearMatchedUsers(int sessionId) {
+        Integer matchedSessionId = matchedUsers.remove(sessionId);
+        if (matchedSessionId != null) {
+            matchedUsers.remove(matchedSessionId);
         }
     }
 }

@@ -40,4 +40,24 @@ public class GameDAO {
          }
 		 return games; 
 	 }
+	public GameDTO randomGames() throws SQLException {
+		GameDTO game = new GameDTO();
+		String getGameSQL = "SELECT * FROM game ORDER BY RAND() LIMIT 1";
+		try (Connection conn = DBConnector.getConnection();
+			 PreparedStatement pstmt = conn.prepareStatement(getGameSQL);
+			 ResultSet rs = pstmt.executeQuery();
+		){
+			if (rs.next()) {
+				int g_num = rs.getInt("g_num");
+				String g_image1 = rs.getString("g_image1");
+				String g_image2 = rs.getString("g_image2");
+				String g_name = rs.getString("g_name");
+				int g_difficulty = rs.getInt("g_difficulty");
+				game = new GameDTO(g_num, g_image1, g_image2, g_name, g_difficulty);
+			}
+		}catch (SQLException e) {
+			throw new SQLException(e);
+		}
+		return game;
+	}
 }
