@@ -228,6 +228,13 @@ public class CustomWebsocketServer extends WebSocketServer {
                             gameData.put("myNickName", UserPool.getInstance().getUser(matchConn.hashCode()).getuName());
                             gameResult.put("data", gameData.toString());
                             matchConn.send(gameResult.toString());
+
+                            MatchPool.getInstance().delete(conn.hashCode(), matchConn.hashCode());
+                            OnGamePool.getInstance().deleteOnGamePool(conn.hashCode());
+                            OnGamePool.getInstance().deleteOnGamePool(matchConn.hashCode());
+                            UserPool.getInstance().clearMatchedUsers(conn.hashCode());
+                            UserPool.getInstance().clearMatchedUsers(matchConn.hashCode());
+
                         } else {
                             JSONObject jsonObject1 = new JSONObject();
                             jsonObject1.put("type", "null");
